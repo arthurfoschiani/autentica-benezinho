@@ -1,25 +1,52 @@
 package br.com.fiap.authentication.model;
 
+import jakarta.persistence.*;
+
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
-/**
- * Mapeia um conjunto de permissões que uma pessoa
- * pode ter nos diversos sistemas da empresa
- */
+@Entity
+@Table(name = "TB_PROFILE", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_NM_PROFILE", columnNames = "NM_PROFILE")
+})
 public class Profile {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_PROFILE")
+    @Column(name = "ID_PROFILE")
     private Long id;
+    @Column(name = "NM_PROFILE")
     private String nome;
-    private Set<Role> roles = new LinkedHashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "TB_PROFILE_ROLE",
+            joinColumns = {
+                    @JoinColumn(
+                            name = "PROFILE",
+                            referencedColumnName = "ID_PROFILE",
+                            foreignKey = @ForeignKey(name = "FK_PROFILE_ROLE")
+                    )
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(
+                            name = "ROLE",
+                            referencedColumnName = "ID_ROLE",
+                            foreignKey = @ForeignKey(name = "FK_ROLE_PROFILE")
+                    )
+            }
+    )
+    private Set<Role> roles;
 
     public Profile() {
+        this.roles = new LinkedHashSet<>();
     }
 
     public Profile(Long id, String nome, Set<Role> roles) {
         this.id = id;
         this.nome = nome;
-        this.roles = roles;
+        this.roles = Objects.nonNull(roles) ? roles : new LinkedHashSet<>();
     }
 
     public Profile addRole(Role role) {
@@ -53,7 +80,6 @@ public class Profile {
         this.nome = nome;
         return this;
     }
-
 
     @Override
     public String toString() {

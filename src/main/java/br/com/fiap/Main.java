@@ -13,6 +13,7 @@ import jakarta.persistence.Persistence;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 public class Main {
@@ -79,14 +80,15 @@ public class Main {
                 .addPerfil(gerenteBancario)
                 .addPerfil(gerenteDeMercado);
 
-
         try {
             manager.getTransaction().begin();
             manager.persist(benefrancis);
             manager.getTransaction().commit();
 
 
-            //Métodos para consultar aqui:
+            getUserById(manager);
+
+            getUsers(manager);
 
 
         } catch (Exception e) {
@@ -106,6 +108,19 @@ public class Main {
             System.out.println(benefrancis);
         }
 
+    }
+
+    private static void getUsers(EntityManager manager) {
+        List<User> users = manager.createQuery("FROM User").getResultList();
+        for (User user: users) {
+            System.out.println(user);
+        }
+    }
+
+    private static void getUserById(EntityManager manager) {
+        String id = JOptionPane.showInputDialog("Digite o id do inventário que deseja buscar: ");
+        User user = manager.find(User.class, id);
+        System.out.println(user);
     }
 
     private static String geraCpf() {
