@@ -20,16 +20,16 @@ public class PessoaJuridica extends Pessoa {
             name = "TB_SOCIOS",
             joinColumns = {
                     @JoinColumn(
-                            name = "PJ",
-                            referencedColumnName = "NR_CNPJ",
-                            foreignKey = @ForeignKey(name = "FK_PJ_PESSOA")
+                            name = "EMPRESA",
+                            referencedColumnName = "ID_PESSOA",
+                            foreignKey = @ForeignKey(name = "FK_EMPRESA_SOCIO")
                     )
             },
             inverseJoinColumns = {
                     @JoinColumn(
-                            name = "PESSOA",
+                            name = "SOCIO",
                             referencedColumnName = "ID_PESSOA",
-                            foreignKey = @ForeignKey(name = "FK_PESSOA_PJ")
+                            foreignKey = @ForeignKey(name = "FK_SOCIO_EMPRESA")
                     )
             }
     )

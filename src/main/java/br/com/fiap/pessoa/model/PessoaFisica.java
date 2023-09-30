@@ -16,22 +16,23 @@ public class PessoaFisica extends Pessoa {
     @Column(name = "NR_CPF")
     private String CPF;
     @Column(name = "SX_CPF")
+    @Enumerated(EnumType.STRING)
     private Sexo sexo;
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "TB_FILHOS",
             joinColumns = {
                     @JoinColumn(
-                            name = "CPF",
-                            referencedColumnName = "NR_CPF",
-                            foreignKey = @ForeignKey(name = "FK_CPF_FILHO")
+                            name = "PAIS",
+                            referencedColumnName = "ID_PESSOA",
+                            foreignKey = @ForeignKey(name = "FK_PAIS_FILHOS")
                     )
             },
             inverseJoinColumns = {
                     @JoinColumn(
                             name = "FILHO",
-                            referencedColumnName = "NR_CPF",
-                            foreignKey = @ForeignKey(name = "FK_FILHO_CPF")
+                            referencedColumnName = "ID_PESSOA",
+                            foreignKey = @ForeignKey(name = "FK_FILHOS_PAIS")
                     )
             }
     )
